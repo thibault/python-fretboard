@@ -12,43 +12,12 @@ from .utils import dict_merge
 # fretboard.add_barre(fret=1, strings=(0, 5), label='')
 # fretboard.add_marker(fret=1, string=1, label='', color='')
 
-DEFAULT_STYLE = '''
-drawing:
-    background_color: white
-    font_color: dimgray
-    font_family: Lato
-    font_size: 15
-    height: 300
-    width: 250
-    spacing: 30
+with open('../config.yml', 'r') as config:
+    DEFAULT_STYLE = yaml.load(config)['fretboard']
 
-nut:
-    color: darkslategray
-    size: 10
-
-fret:
-    color: darkgray
-    size: 2
-
-inlays:
-    color: black
-    radius: 2
-
-string:
-    color: darkslategray
-    size: 3
-
-marker:
-    border_color: darkslategray
-    color: steelblue
-    font_color: white
-    radius: 12
-    stroke_width: 2
-
-'''
 
 class Fretboard(object):
-    default_style = yaml.safe_load(DEFAULT_STYLE)
+    default_style = DEFAULT_STYLE
 
     # Guitars and basses have different inlay patterns than, e.g., ukulele
     # A double inlay will be added at the octave (12th fret)

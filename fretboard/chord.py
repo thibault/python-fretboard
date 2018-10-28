@@ -9,16 +9,13 @@ from .fretboard import Fretboard
 from .utils import dict_merge
 
 
-CHORD_STYLE = '''
-string:
-    muted_font_color: silver
-    open_font_color: steelblue
-'''
+with open('../config.yml', 'r') as config:
+    CHORD_STYLE = yaml.load(config)['chord']
 
 
 class Chord(object):
     default_style = dict_merge(
-        yaml.safe_load(CHORD_STYLE),
+        CHORD_STYLE,
         Fretboard.default_style
     )
     inlays = Fretboard.inlays

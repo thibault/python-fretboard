@@ -1,0 +1,32 @@
+fretboard:
+  drawing:
+      background_color:
+      font_color: dimgray
+      font_family: Verdana
+      font_size: 15
+      height: 300
+      width: 250
+      spacing: 30
+  nut:
+      color: darkslategray
+      size: 10
+  fret:
+      color: darkgray
+      size: 2
+  inlays:
+      color: darkslategray
+      radius: 2
+  string:
+      color: darkslategray
+      size: 3
+  marker:
+      border_color: black
+      color: darkslategray
+      font_color: white
+      radius: 18
+      stroke_width: 2
+
+chord:
+  string:
+    muted_font_color: silver
+    open_font_color: darkslategray
