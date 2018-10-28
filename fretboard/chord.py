@@ -1,7 +1,6 @@
 import copy
 
 import attrdict
-import svgwrite
 import yaml
 
 import fretboard
@@ -10,13 +9,27 @@ from .utils import dict_merge
 
 
 with open('../config.yml', 'r') as config:
-    CHORD_STYLE = yaml.load(config)['chord']
+    config_dict = yaml.load(config)
+    CHORD_STYLE = config_dict['chord']
+    FRETBOARD_STYLE = config_dict['fretboard']
 
 
 class Chord(object):
+    """
+    Create a chord diagram.
+
+    positions = string of finger positions, e.g. guitar D = 'xx0232'. If frets
+    go above 9, use hyphens to separate all strings, e.g. 'x-x-0-14-15-14'.
+
+    fingers = string of finger labels, e.g. 'T--132' for guitar D/F# '2x0232'.
+
+    barre = int specifying a fret to be completely barred. Minimal barres are
+    automatically inserted, so this should be used when you want to override
+    this behaviour.
+    """
     default_style = dict_merge(
         CHORD_STYLE,
-        Fretboard.default_style
+        FRETBOARD_STYLE
     )
     inlays = None
     strings = None
@@ -25,6 +38,7 @@ class Chord(object):
         if positions is None:
             positions = []
         elif '-' in positions:
+            # use - to separate numbers when frets go above 9, e.g., x-x-0-10-10-10
             positions = positions.split('-')
         else:
             positions = list(positions)
@@ -98,7 +112,6 @@ class Chord(object):
                     string=string,
                     label='X' if is_muted else 'O',
                     font_color=self.style.string.muted_font_color if is_muted else self.style.string.open_font_color
-
                 )
             elif fret is not None and fret != barre_fret:
                 # Add the fret marker

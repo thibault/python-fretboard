@@ -25,10 +25,12 @@ class Fretboard(object):
             'color': None,
             'label': None,
             'font_color': None,
-        }) for x in range(strings)]
+        }) for _ in range(strings or self.string_count)]
 
         self.markers = []
 
+        # Guitars and basses have different inlay patterns than, e.g., ukulele
+        # A double inlay will be added at the 12th/24th/... fret regardless.
         self.inlays = inlays or self.inlays
 
         self.layout = attrdict.AttrDict()
@@ -39,6 +41,8 @@ class Fretboard(object):
                 style or {}
             )
         )
+
+        self.drawing = None
 
     def add_string_label(self, string, label, font_color=None):
         self.strings[string].label = label
@@ -52,6 +56,13 @@ class Fretboard(object):
             'label': label,
             'font_color': font_color,
         }))
+
+    def add_barre(self, fret, strings, finger):
+        self.add_marker(
+            string=(strings[0], strings[1]),
+            fret=fret,
+            label=finger,
+        )
 
     def calculate_layout(self):
         # Bounding box of our fretboard
