@@ -19,11 +19,7 @@ with open('../config.yml', 'r') as config:
 class Fretboard(object):
     default_style = DEFAULT_STYLE
 
-    # Guitars and basses have different inlay patterns than, e.g., ukulele
-    # A double inlay will be added at the octave (12th fret)
-    inlays = (3, 5, 7, 9)
-
-    def __init__(self, strings=6, frets=(0, 5), inlays=None, style=None):
+    def __init__(self, strings=None, frets=(0, 5), inlays=None, style=None):
         self.frets = list(range(max(frets[0] - 1, 0), frets[1] + 1))
         self.strings = [attrdict.AttrDict({
             'color': None,
@@ -324,3 +320,18 @@ class Fretboard(object):
     def save(self, filename):
         with open(filename, 'w') as output:
             self.render(output)
+
+
+class GuitarFretboard(Fretboard):
+    string_count = 6
+    inlays = (3, 5, 7, 9)
+
+
+class BassFretboard(Fretboard):
+    string_count = 4
+    inlays = (3, 5, 7, 9)
+
+
+class UkuleleFretboard(Fretboard):
+    string_count = 4
+    inlays = (3, 5, 7, 10)

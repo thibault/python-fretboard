@@ -18,8 +18,8 @@ class Chord(object):
         CHORD_STYLE,
         Fretboard.default_style
     )
-    inlays = Fretboard.inlays
-    strings = 6
+    inlays = None
+    strings = None
 
     def __init__(self, positions=None, fingers=None, style=None):
         if positions is None:
@@ -126,10 +126,20 @@ class Chord(object):
             self.render(output)
 
 
+class GuitarChord(Chord):
+    @property
+    def fretboard_cls(self):
+        return fretboard.GuitarFretboard
+
+
 class BassChord(Chord):
-    strings = 4
+    @property
+    def fretboard_cls(self):
+        return fretboard.BassFretboard
 
 
 class UkuleleChord(Chord):
-    strings = 4
-    inlays = (3, 5, 7, 10)
+    @property
+    def fretboard_cls(self):
+        return fretboard.UkuleleFretboard
+
