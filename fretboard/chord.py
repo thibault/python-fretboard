@@ -4,8 +4,8 @@ import attrdict
 import svgwrite
 import yaml
 
+import fretboard
 from .compat import StringIO
-from .fretboard import Fretboard
 from .utils import dict_merge
 
 
@@ -39,10 +39,11 @@ class Chord(object):
             )
         )
 
-    def get_barre_fret(self):
-        for index, finger in enumerate(self.fingers):
-            if finger.isdigit() and self.fingers.count(finger) > 1:
-                return int(self.positions[index])
+        self.fretboard = None
+
+    @property
+    def fretboard_cls(self):
+        raise NotImplementedError
 
     def get_fret_range(self):
         fretted_positions = list(filter(lambda pos: isinstance(pos, int), self.positions))
@@ -53,7 +54,7 @@ class Chord(object):
         return (first_fret, first_fret + 4)
 
     def draw(self):
-        self.fretboard = Fretboard(
+        self.fretboard = self.fretboard_cls(
             strings=self.strings,
             frets=self.get_fret_range(),
             inlays=self.inlays,
