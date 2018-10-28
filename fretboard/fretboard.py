@@ -116,10 +116,11 @@ class Fretboard(object):
                 )
             )
 
-            # Draw the label obove the string
+            # Draw the label above the string
             if string.label is not None:
                 self.drawing.add(
-                    self.drawing.text(string.label,
+                    self.drawing.text(
+                        string.label,
                         insert=(x, label_y),
                         font_family=self.style.drawing.font_family,
                         font_size=self.style.drawing.font_size,
@@ -143,7 +144,7 @@ class Fretboard(object):
             )
 
     def draw_inlays(self):
-        x = (self.style.drawing.spacing) - (self.style.inlays.radius * 4)
+        x = self.style.drawing.spacing - (self.style.inlays.radius * 4)
 
         for index, fret in enumerate(self.frets):
             if index == 0:
@@ -186,7 +187,8 @@ class Fretboard(object):
             x = self.layout.width + self.style.drawing.spacing + self.style.inlays.radius
             y = self.layout.y + self.style.nut.size + (self.style.drawing.font_size * .2)
             self.drawing.add(
-                self.drawing.text('{0}fr'.format(self.frets[0]),
+                self.drawing.text(
+                    '{0}fr'.format(self.frets[0]),
                     insert=(x, y),
                     font_family=self.style.drawing.font_family,
                     font_size=self.style.drawing.font_size,
@@ -226,7 +228,8 @@ class Fretboard(object):
         # Draw the label
         if marker.label is not None:
             self.drawing.add(
-                self.drawing.text(marker.label,
+                self.drawing.text(
+                    marker.label,
                     insert=(x, y),
                     font_family=self.style.drawing.font_family,
                     font_size=self.style.drawing.font_size,
@@ -271,7 +274,8 @@ class Fretboard(object):
 
         if marker.label is not None:
             self.drawing.add(
-                self.drawing.text(marker.label,
+                self.drawing.text(
+                    marker.label,
                     insert=(start_x, y),
                     font_family=self.style.drawing.font_family,
                     font_size=self.style.drawing.font_size,
