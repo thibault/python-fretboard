@@ -19,15 +19,15 @@ def clean(ctx):
 @invoke.task
 def build(ctx):
     # Chord (D)
-    chord = fretboard.Chord(positions='xx0232', fingers='---132')
+    chord = fretboard.GuitarChord(positions='xx0232', fingers='---132')
     chord.save('svg/D.svg')
 
     # Barre chord (F#)
-    chord = fretboard.Chord(positions='133211', fingers='134211')
+    chord = fretboard.GuitarChord(positions='133211', fingers='134211')
     chord.save('svg/F-sharp.svg')
 
     # C shape, higher up the neck
-    chord = fretboard.Chord(positions='x-15-14-11-12-11', fingers='-43121')
+    chord = fretboard.GuitarChord(positions='x-15-14-11-12-11', fingers='-43121')
     chord.save('svg/C-shape.svg')
 
     # Ukulele chord (G)
@@ -39,7 +39,7 @@ def build(ctx):
     chord.save('svg/bass-E.svg')
 
     # Fretboard w/ Rocksmith-style string colors (F#)
-    fb = fretboard.Fretboard(style={
+    fb = fretboard.GuitarFretboard(style={
         'drawing': {'background_color': 'black'},
         'fret': {'color': 'darkslategray'},
         'nut': {'color': 'darkslategray'},
@@ -61,7 +61,7 @@ def build(ctx):
     fb.save('svg/F-sharp-rocksmith.svg')
 
     # Pentatonic scale shape w/ highlighted root notes
-    fb = fretboard.Fretboard(frets=(5, 8), style={'marker': {'color': 'cornflowerblue'}})
+    fb = fretboard.GuitarFretboard(frets=(5, 8), style={'marker': {'color': 'cornflowerblue'}})
     fb.add_marker(string=0, fret=5, label='A', color='salmon')
     fb.add_marker(string=1, fret=5, label='D')
     fb.add_marker(string=2, fret=5, label='G')
