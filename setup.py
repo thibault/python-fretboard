@@ -8,7 +8,7 @@ except ImportError:
 with open('./requirements.txt') as fd:
     requirements = fd.read().splitlines()
 
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
 setup(
     name='fretboard',
