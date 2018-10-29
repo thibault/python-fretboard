@@ -35,6 +35,6 @@ setup(
     keywords='guitar fretboard chord',
 
     packages=['fretboard'],
-    package_data={'fretboard': 'config.yml'},
+    package_data={'fretboard': ['config.yml']},
     install_requires=requirements,
 )
