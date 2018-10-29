@@ -1,4 +1,5 @@
 import copy
+import pkg_resources
 
 import attrdict
 import yaml
@@ -8,10 +9,9 @@ from .compat import StringIO
 from .utils import dict_merge
 
 
-with open('../config.yml', 'r') as config:
-    config_dict = yaml.load(config)
-    CHORD_STYLE = config_dict['chord']
-    FRETBOARD_STYLE = config_dict['fretboard']
+config = yaml.load(pkg_resources.resource_string(__name__, "config.yml"))
+CHORD_STYLE = config['chord']
+FRETBOARD_STYLE = config['fretboard']
 
 
 class Chord(object):

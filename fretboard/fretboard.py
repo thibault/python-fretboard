@@ -1,4 +1,5 @@
 import copy
+import pkg_resources
 
 import attrdict
 import svgwrite
@@ -12,12 +13,12 @@ from .utils import dict_merge
 # fretboard.add_barre(fret=1, strings=(0, 5), label='')
 # fretboard.add_marker(fret=1, string=1, label='', color='')
 
-with open('../config.yml', 'r') as config:
-    DEFAULT_STYLE = yaml.load(config)['fretboard']
+config = yaml.load(pkg_resources.resource_string(__name__, "config.yml"))
+FRETBOARD_STYLE = config['fretboard']
 
 
 class Fretboard(object):
-    default_style = DEFAULT_STYLE
+    default_style = FRETBOARD_STYLE
 
     def __init__(self, strings=None, frets=(0, 5), inlays=None, style=None):
         self.frets = list(range(max(frets[0] - 1, 0), frets[1] + 1))
