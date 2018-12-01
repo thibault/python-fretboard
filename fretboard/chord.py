@@ -34,7 +34,14 @@ class Chord(object):
     inlays = None
     strings = None
 
-    def __init__(self, positions=None, fingers=None, barre=None, style=None):
+    def __init__(
+            self,
+            positions=None,
+            fingers=None,
+            barre=None,
+            title=None,
+            style=None
+    ):
         if positions is None:
             positions = []
         elif '-' in positions:
@@ -55,6 +62,8 @@ class Chord(object):
             )
         )
 
+        self.title = title
+
         self.fretboard = None
 
     @property
@@ -74,6 +83,7 @@ class Chord(object):
             strings=self.strings,
             frets=self.get_fret_range(),
             inlays=self.inlays,
+            title=self.title,
             style=self.style
         )
 
