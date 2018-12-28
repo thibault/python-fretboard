@@ -19,7 +19,7 @@ def clean(ctx):
 @invoke.task
 def build(ctx):
     # Chord (D)
-    chord = GuitarChord(positions='xx0232', fingers='---132', title='D')
+    chord = GuitarChord(positions='xx0232', fingers='---132', title='D Major Chord')
     chord.save('svg/D.svg')
 
     # Barre chord (F#)
