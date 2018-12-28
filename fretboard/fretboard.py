@@ -57,7 +57,8 @@ class Fretboard(object):
         self.strings[string].label = label
         self.strings[string].font_color = font_color
 
-    def add_marker(self, string, fret, color=None, label=None, font_color=None):
+    def add_marker(self, string, fret,
+                   color=None, label=None, font_color=None):
         self.markers.append(attrdict.AttrDict({
             'fret': fret,
             'string': string,
@@ -75,18 +76,26 @@ class Fretboard(object):
 
     def calculate_layout(self):
         # Bounding box of our fretboard
-        self.layout.update({
-            'x': self.style.drawing.spacing,
-            'y': self.style.drawing.spacing * 1.5,
-            'width': self.style.drawing.width - (self.style.drawing.spacing * 2.25),
-            'height': self.style.drawing.height - (self.style.drawing.spacing * 2),
-        })
+        self.layout.x = self.style.drawing.spacing
+        # Above the fret box is the title, with padding either side
+        self.layout.y = (self.style.drawing.spacing * 2
+                         + self.style.title.font_size)
+
+        # Add some extra space on the right for fret indicators
+        self.layout.width = (self.style.drawing.width -
+                             self.style.drawing.spacing * 2.5)
+        self.layout.height = (self.style.drawing.height
+                              - (self.layout.y + self.style.drawing.spacing))
 
         # Spacing between the strings
-        self.layout['string_space'] = self.layout.width / (len(self.strings) - 1)
+        self.layout.string_space = self.layout.width / (len(self.strings) - 1)
 
-        # Spacing between the frets, with room at the top and bottom for the nut
-        self.layout['fret_space'] = (self.layout.height - self.style.nut.size * 2) / (len(self.frets) - 1)
+        # Spacing between the frets, with room at the top and bottom for the
+        # nut
+        self.layout.fret_space = (
+                (self.layout.height - self.style.nut.size * 2)
+                / (len(self.frets) - 1)
+        )
 
     def draw_frets(self):
         top = self.layout.y + self.style.nut.size
@@ -98,8 +107,14 @@ class Fretboard(object):
             else:
                 self.drawing.add(
                     self.drawing.line(
-                        start=(self.layout.x, top + (self.layout.fret_space * index)),
-                        end=(self.layout.x + self.layout.width, top + (self.layout.fret_space * index)),
+                        start=(
+                            self.layout.x,
+                            top + (self.layout.fret_space * index)
+                        ),
+                        end=(
+                            self.layout.x + self.layout.width,
+                            top + (self.layout.fret_space * index)
+                        ),
                         stroke=self.style.fret.color,
                         stroke_width=self.style.fret.size,
                     )
@@ -109,17 +124,22 @@ class Fretboard(object):
         top = self.layout.y
         bottom = top + self.layout.height
 
-        label_y = self.layout.y + self.style.drawing.font_size - self.style.drawing.spacing
+        label_y = (self.layout.y
+                   + self.style.drawing.font_size / 2
+                   - self.style.drawing.spacing)
 
         for index, string in enumerate(self.strings):
-            width = self.style.string.size - ((self.style.string.size * 1 / (len(self.strings) * 1.5)) * index)
+            width = (self.style.string.size
+                     - ((self.style.string.size / (len(self.strings) * 1.5))
+                        * index))
 
-            # Offset the first and last strings, so they're not drawn outside the edge of the nut.
+            # Offset the first and last strings, so they're not drawn
+            # outside the edge of the nut.
             offset = 0
             if index == 0:
-                offset += width / 2.
+                offset = width / 2.
             elif index == len(self.strings) - 1:
-                offset -= width / 2.
+                offset = - width / 2.
 
             x = self.layout.x + (self.layout.string_space * index) + offset
 
@@ -172,7 +192,7 @@ class Fretboard(object):
                 self.layout.fret_space * index,
             )) - self.layout.fret_space / 2
 
-            if fret in self.inlays or fret - 12 in self.inlays:
+            if fret % 12 in self.inlays:
                 # Single dot inlay
                 self.drawing.add(
                     self.drawing.circle(
@@ -200,8 +220,16 @@ class Fretboard(object):
 
     def draw_fret_label(self):
         if self.frets[0] > 0:
-            x = self.layout.width + self.style.drawing.spacing + self.style.inlays.radius
-            y = self.layout.y + self.style.nut.size + (self.style.drawing.font_size * .2)
+            x = sum((
+                self.layout.width,
+                self.style.drawing.spacing,
+                self.style.inlays.radius
+            ))
+            y = sum((
+                self.layout.y,
+                self.style.nut.size,
+                self.style.drawing.font_size * .2
+            ))
             self.drawing.add(
                 self.drawing.text(
                     '{0}fr'.format(self.frets[0]),
@@ -224,11 +252,13 @@ class Fretboard(object):
 
     def draw_marker(self, marker):
         # Fretted position, add the marker to the fretboard.
-        x = self.style.drawing.spacing + (self.layout.string_space * marker.string)
+        x = (self.style.drawing.spacing
+             + (self.layout.string_space * marker.string))
         y = sum((
             self.layout.y,
             self.style.nut.size,
-            (self.layout.fret_space * (marker.fret - self.frets[0])) - (self.layout.fret_space / 2)
+            (self.layout.fret_space * (marker.fret - self.frets[0])
+             - self.layout.fret_space / 2)
         ))
 
         self.drawing.add(
@@ -257,13 +287,16 @@ class Fretboard(object):
             )
 
     def draw_barre(self, marker):
-        start_x = self.style.drawing.spacing + (self.layout.string_space * marker.string[0])
-        end_x = self.style.drawing.spacing + (self.layout.string_space * marker.string[1])
+        start_x = (self.style.drawing.spacing
+                   + self.layout.string_space * marker.string[0])
+        end_x = (self.style.drawing.spacing
+                 + self.layout.string_space * marker.string[1])
 
         y = sum((
             self.layout.y,
             self.style.nut.size,
-            (self.layout.fret_space * (marker.fret - self.frets[0])) - (self.layout.fret_space / 2)
+            (self.layout.fret_space * (marker.fret - self.frets[0])
+             - self.layout.fret_space / 2)
         ))
 
         # Lines don't support borders, so fake it by drawing
@@ -274,7 +307,8 @@ class Fretboard(object):
                 end=(end_x, y),
                 stroke=self.style.marker.border_color,
                 stroke_linecap='round',
-                stroke_width=(self.style.marker.radius * 2) + (self.style.marker.stroke_width * 2)
+                stroke_width=(self.style.marker.radius * 2
+                              + self.style.marker.stroke_width * 2)
             )
         )
 
@@ -305,15 +339,15 @@ class Fretboard(object):
     def draw_title(self):
         if self.title is not None:
             x = self.layout.width/2 + self.style.drawing.spacing
-            y = self.layout.y - self.style.drawing.spacing
+            y = self.style.drawing.spacing
             self.drawing.add(
                 self.drawing.text(
                     self.title,
                     insert=(x, y),
-                    font_family=self.style.drawing.font_family,
-                    font_size=self.style.drawing.font_size,
+                    font_family=self.style.title.font_family,
+                    font_size=self.style.title.font_size,
                     font_weight='bold',
-                    fill=self.style.drawing.font_color,
+                    fill=self.style.title.font_color,
                     text_anchor='middle',
                     alignment_baseline='central'
                 )

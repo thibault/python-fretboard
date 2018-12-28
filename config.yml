@@ -3,9 +3,9 @@ fretboard:
       background_color:
       font_color: dimgray
       font_family: Verdana
-      font_size: 15
-      height: 300
-      width: 250
+      font_size: 24
+      height: 400
+      width: 300
       spacing: 30
   nut:
       color: darkslategray
@@ -25,6 +25,10 @@ fretboard:
       font_color: white
       radius: 18
       stroke_width: 2
+  title:
+      font_color: dimgray
+      font_family: Verdana
+      font_size: 30
 
 chord:
   string:
