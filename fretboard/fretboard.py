@@ -78,8 +78,10 @@ class Fretboard(object):
         # Bounding box of our fretboard
         self.layout.x = self.style.drawing.spacing
         # Above the fret box is the title, with padding either side
-        self.layout.y = (self.style.drawing.spacing * 2
-                         + self.style.title.font_size)
+        self.layout.y = self.style.drawing.spacing
+        if self.title:
+            self.layout.y += (self.style.drawing.spacing
+                              + self.style.title.font_size)
 
         # Add some extra space on the right for fret indicators
         self.layout.width = (self.style.drawing.width -
