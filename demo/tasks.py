@@ -27,7 +27,7 @@ def build(ctx):
     chord.save('svg/F-sharp.svg')
 
     # C shape, higher up the neck
-    chord = GuitarChord(positions='x-15-14-11-12-11', fingers='-43121', title='C')
+    chord = GuitarChord(positions='x-15-14-12-13-12', fingers='-43121', title='C')
     chord.save('svg/C-shape.svg')
 
     # Ukulele chord (G)
