@@ -29,6 +29,8 @@ fretboard:
       font_color: dimgray
       font_family: Verdana
       font_size: 30
+  fret_label:
+      width: 28
 
 chord:
   string:

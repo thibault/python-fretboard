@@ -84,8 +84,12 @@ class Fretboard(object):
                               + self.style.title.font_size)
 
         # Add some extra space on the right for fret indicators
-        self.layout.width = (self.style.drawing.width -
-                             self.style.drawing.spacing * 2.5)
+        self.layout.width = (self.style.drawing.width
+                             - self.layout.x
+                             - self.style.drawing.spacing)
+        if self.frets[0] > 0:
+            self.layout.width -= self.style.fret_label.width
+
         self.layout.height = (self.style.drawing.height
                               - (self.layout.y + self.style.drawing.spacing))
 
@@ -223,25 +227,28 @@ class Fretboard(object):
     def draw_fret_label(self):
         if self.frets[0] > 0:
             x = sum((
+                self.layout.x,
                 self.layout.width,
-                self.style.drawing.spacing,
-                self.style.inlays.radius
+                self.style.marker.radius,
+                self.style.marker.stroke_width,
+                self.style.fret_label.width / 2,
             ))
             y = sum((
                 self.layout.y,
                 self.style.nut.size,
-                self.style.drawing.font_size * .2
+                self.layout.fret_space / 2,
             ))
             self.drawing.add(
                 self.drawing.text(
-                    '{0}fr'.format(self.frets[0]),
+                    '{0}'.format(self.frets[1]),
                     insert=(x, y),
                     font_family=self.style.drawing.font_family,
                     font_size=self.style.drawing.font_size,
                     font_style='italic',
                     font_weight='bold',
                     fill=self.style.drawing.font_color,
-                    text_anchor='start',
+                    text_anchor='middle',
+                    alignment_baseline='central',
                 )
             )
 
