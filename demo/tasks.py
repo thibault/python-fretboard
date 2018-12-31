@@ -1,12 +1,9 @@
 import os
-import sys
 
 import invoke
 import livereload
 
-sys.path.append(os.path.abspath('..'))
-
-from fretboard import GuitarChord, UkuleleChord, BassChord, GuitarFretboard
+from diagram import GuitarChord, UkuleleChord, BassChord, GuitarFretboard
 
 server = livereload.Server()
 

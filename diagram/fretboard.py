@@ -2,7 +2,7 @@ import copy
 
 import attrdict
 import svgwrite
-import yaml
+import diagram
 
 from .compat import StringIO
 from .utils import dict_merge
@@ -12,12 +12,9 @@ from .utils import dict_merge
 # fretboard.add_barre(fret=1, strings=(0, 5), label='')
 # fretboard.add_marker(fret=1, string=1, label='', color='')
 
-with open('../config.yml', 'r') as config:
-    DEFAULT_STYLE = yaml.load(config)['fretboard']
-
 
 class Fretboard(object):
-    default_style = DEFAULT_STYLE
+    default_style = diagram.FRETBOARD_STYLE
 
     def __init__(
             self,

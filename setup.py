@@ -34,6 +34,6 @@ setup(
     ],
     keywords='guitar fretboard chord',
 
-    packages=['fretboard'],
+    packages=['diagram'],
     install_requires=requirements,
 )

@@ -1,17 +1,9 @@
 import copy
 
 import attrdict
-import yaml
-
-import fretboard
+import diagram
 from .compat import StringIO
 from .utils import dict_merge
-
-
-with open('../config.yml', 'r') as config:
-    config_dict = yaml.load(config)
-    CHORD_STYLE = config_dict['chord']
-    FRETBOARD_STYLE = config_dict['fretboard']
 
 
 class Chord(object):
@@ -28,8 +20,8 @@ class Chord(object):
     this behaviour.
     """
     default_style = dict_merge(
-        CHORD_STYLE,
-        FRETBOARD_STYLE
+        diagram.CHORD_STYLE,
+        diagram.FRETBOARD_STYLE
     )
     inlays = None
     strings = None
@@ -158,17 +150,17 @@ class Chord(object):
 class GuitarChord(Chord):
     @property
     def fretboard_cls(self):
-        return fretboard.GuitarFretboard
+        return diagram.GuitarFretboard
 
 
 class BassChord(Chord):
     @property
     def fretboard_cls(self):
-        return fretboard.BassFretboard
+        return diagram.BassFretboard
 
 
 class UkuleleChord(Chord):
     @property
     def fretboard_cls(self):
-        return fretboard.UkuleleFretboard
+        return diagram.UkuleleFretboard
 
