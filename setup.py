@@ -37,4 +37,5 @@ setup(
     packages=['diagram'],
     install_requires=requirements,
     include_package_data=True,
+    package_data={'diagram': ['diagram/config.yml']}
 )
