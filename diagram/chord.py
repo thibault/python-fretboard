@@ -1,9 +1,9 @@
 import copy
 
-import attrdict
+from attrdict import AttrDict
 import diagram
 from .compat import StringIO
-from .utils import dict_merge
+from .utils import convert_int
 
 
 class Chord(object):
@@ -12,17 +12,18 @@ class Chord(object):
 
     positions = string of finger positions, e.g. guitar D = 'xx0232'. If frets
     go above 9, use hyphens to separate all strings, e.g. 'x-x-0-14-15-14'.
+    Alternatively, provide a list (array) of positions, for example
+    ['x','x', 0, 2, 3, 2] or ['x','x', 0, 14, 15, 14]
 
     fingers = string of finger labels, e.g. 'T--132' for guitar D/F# '2x0232'.
+    or a list as above (handy when reading config from YAML, for example)
+    ['T', '-' ,'-', 1, 3, 2]
 
     barre = int specifying a fret to be completely barred. Minimal barres are
     automatically inserted, so this should be used when you want to override
     this behaviour.
     """
-    default_style = dict_merge(
-        diagram.CHORD_STYLE,
-        diagram.FRETBOARD_STYLE
-    )
+    default_style = AttrDict(diagram.FRETBOARD_STYLE) + AttrDict(diagram.CHORD_STYLE)
     inlays = None
     strings = None
 
@@ -34,6 +35,7 @@ class Chord(object):
             title=None,
             style=None
     ):
+
         if positions is None:
             positions = []
         elif '-' in positions:
@@ -47,12 +49,7 @@ class Chord(object):
 
         self.barre = barre
 
-        self.style = attrdict.AttrDict(
-            dict_merge(
-                copy.deepcopy(self.default_style),
-                style or {}
-            )
-        )
+        self.style = self.default_style + AttrDict(style or {})
 
         self.title = title
 

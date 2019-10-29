@@ -1,6 +1,6 @@
 import copy
 
-import attrdict
+from attrdict import AttrDict
 import svgwrite
 import diagram
 
@@ -14,7 +14,7 @@ from .utils import dict_merge
 
 
 class Fretboard(object):
-    default_style = diagram.FRETBOARD_STYLE
+    default_style = AttrDict(diagram.FRETBOARD_STYLE)
 
     def __init__(
             self,
@@ -37,14 +37,10 @@ class Fretboard(object):
         # A double inlay will be added at the 12th/24th/... fret regardless.
         self.inlays = inlays or self.inlays
 
-        self.layout = attrdict.AttrDict()
+        self.layout = AttrDict()
 
-        self.style = attrdict.AttrDict(
-            dict_merge(
-                copy.deepcopy(self.default_style),
-                style or {}
-            )
-        )
+
+        self.style = self.default_style + AttrDict(style or {})
 
         self.title = title
 
@@ -56,7 +52,7 @@ class Fretboard(object):
 
     def add_marker(self, string, fret,
                    color=None, label=None, font_color=None):
-        self.markers.append(attrdict.AttrDict({
+        self.markers.append(AttrDict({
             'fret': fret,
             'string': string,
             'color': color,
