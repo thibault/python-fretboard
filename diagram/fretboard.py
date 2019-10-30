@@ -23,6 +23,7 @@ class Fretboard(object):
             inlays=None,
             title=None,
             style=None,
+            label_all_frets=False
     ):
         self.frets = list(range(max(frets[0] - 1, 0), frets[1] + 1))
         self.strings = [AttrDict({
@@ -84,8 +85,9 @@ class Fretboard(object):
         self.layout.width = (self.style.drawing.width
                              - self.layout.x
                              - self.style.drawing.spacing)
-        if self.frets[0] > 0:
-            self.layout.width -= self.style.fret_label.width
+#        if self.frets[0] > 0:
+# allow for fret labels on ALL diagrams for consistent width
+        self.layout.width -= self.style.fret_label.width
 
         self.layout.height = (self.style.drawing.height
                               - (self.layout.y + self.style.drawing.spacing))
@@ -230,26 +232,50 @@ class Fretboard(object):
                 )
 
     def draw_fret_label(self):
-        if self.frets[0] > 0:
-            x = sum((
-                self.layout.x,
-                self.layout.width,
-                self.style.marker.radius,
-                self.style.marker.stroke_width,
-                self.style.fret_label.width / 2,
-            ))
+        """
+        draw fret number to the right of the first used fret.
+        """
+        # no labels in first position
+        if self.frets[0] == 0:
+            return
+
+        # build a list of frets to label
+        # each entry is a 3-tuple: (x, y, text)
+        fretlist = []
+        # x coordinate
+        label_x = sum((
+            self.layout.x,                   # left of fretboard
+            self.layout.width,               # width of fretboard
+            self.style.marker.radius,        # radius of marker or barre
+            self.style.marker.stroke_width,  #
+            self.style.fret_label.width / 2, # half label width (center-aligned)
+        ))
+
+        for i, f in enumerate(self.frets[1:]):
+            # this is the part that will be different for each fret
             y = sum((
-                self.layout.y,
-                self.style.nut.size,
-                self.layout.fret_space / 2,
+                self.layout.y,                   # top of fretboard
+                self.style.nut.size,             # nut size/weight (configurable)
+                self.layout.fret_space / 2,      # middle of fret (vertically)
+                self.layout.fret_space * i       # move down 'i' frets
             ))
+
+            fretlist.append((label_x, y, str(f)))
+
+        # if we aren't in open/first position...
+        if not self.style.drawing.label_all_frets:
+            # ignore all but the first entry
+            fretlist = [ fretlist[0] ]
+        for x, y, label_text in fretlist:
+            # add a new text element at the above coordinates
             self.drawing.add(
                 self.drawing.text(
-                    '{0}'.format(self.frets[1]),
+                    label_text,
                     insert=(x, y),
                     font_family=self.style.drawing.font_family,
-                    font_size=self.style.drawing.font_size,
-                    font_style='italic',
+                    font_size=self.style.fret_label.font_size or
+                              self.style.drawing.font_size,
+                    font_style=self.style.fret_label.font_style or 'italic',
                     font_weight='bold',
                     fill=self.style.drawing.font_color,
                     text_anchor='middle',
