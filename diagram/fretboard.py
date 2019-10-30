@@ -22,7 +22,7 @@ class Fretboard(object):
             frets=(0, 5),
             inlays=None,
             title=None,
-            style=None
+            style=None,
     ):
         self.frets = list(range(max(frets[0] - 1, 0), frets[1] + 1))
         self.strings = [AttrDict({
@@ -44,6 +44,9 @@ class Fretboard(object):
         self.style = self.default_style + AttrDict(style or {})
 
         self.title = title
+
+        # strings get thinner from low -> high
+        # not everyone wants this, so make it configurable
 
         self.drawing = None
 
@@ -129,9 +132,15 @@ class Fretboard(object):
                    - self.style.drawing.spacing)
 
         for index, string in enumerate(self.strings):
-            width = (self.style.string.size
-                     - ((self.style.string.size / (len(self.strings) * 1.5))
-                        * index))
+            # adds a style option so all strings have the same width
+            if self.style.string.equal_weight:
+                width = self.style.string.size
+            else:
+                # previous default, strings get thinner from left to right
+                # just like real ones.
+                width = (self.style.string.size
+                         - ((self.style.string.size / (len(self.strings) * 1.5))
+                            * index))
 
             # Offset the first and last strings, so they're not drawn
             # outside the edge of the nut.
@@ -159,7 +168,8 @@ class Fretboard(object):
                         string.label,
                         insert=(x, label_y),
                         font_family=self.style.drawing.font_family,
-                        font_size=self.style.string.label_font_size or self.style.drawing.font_size,
+                        font_size=self.style.string.label_font_size or
+                                  self.style.drawing.font_size,
                         font_weight='bold',
                         fill=string.font_color or self.style.marker.color,
                         text_anchor='middle',

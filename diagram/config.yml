@@ -1,3 +1,4 @@
+# vim: set ts=2 sts=2 sw=2 et ci ft=yaml:
 fretboard:
   drawing:
       background_color:
@@ -19,6 +20,12 @@ fretboard:
   string:
       color: darkslategray
       size: 3
+      muted_font_color:
+      open_font_color:
+      label_font_family:
+      label_font_size:
+      equal_weight: false
+
   marker:
       border_color: black
       color: darkslategray
