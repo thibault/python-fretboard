@@ -8,6 +8,7 @@ fretboard:
       height: 400
       width: 300
       spacing: 30
+      label_all_frets: false
   nut:
       color: darkslategray
       size: 10
@@ -38,6 +39,8 @@ fretboard:
       font_size: 30
   fret_label:
       width: 28
+      font_style: italic
+
 
 chord:
   string:
