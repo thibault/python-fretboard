@@ -321,7 +321,7 @@ class Fretboard(object):
                     font_family=self.style.drawing.font_family,
                     font_size=self.style.drawing.font_size,
                     font_weight='bold',
-                    fill=self.style.marker.font_color,
+                    fill=marker.font_color or self.style.marker.font_color,
                     text_anchor='middle',
                     alignment_baseline='central',
                     dominant_baseline='middle'
