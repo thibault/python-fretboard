@@ -170,3 +170,87 @@ class UkuleleChord(Chord):
     def fretboard_cls(self):
         return diagram.UkuleleFretboard
 
+class MultiFingerChord(UkuleleChord):
+    """
+    A special case of UkuleleChord that can handle
+    additional markers (more than one per string)
+    """
+
+    def __init__(self, **kwargs):
+
+
+        # ensure we have only expected args for the parent class
+        superargs = {
+            'positions': kwargs.get('positions', None),
+            'fingers': kwargs.get('fingers', None),
+            'barre': kwargs.get('barre', None),
+            'title': kwargs.get('title', None),
+            'style': kwargs.get('style', None),
+            }
+
+        super().__init__(**superargs)
+
+        fretted_positions = list(filter(lambda pos: isinstance(pos, int), self.positions))
+        self.maxfret = max(fretted_positions)
+        self.minfret = min([p for p in fretted_positions if p > 0 ])
+        print("min: {} max: {}".format(self.minfret, self.maxfret))
+
+        # our additional key for extra fingers
+        self.extras = kwargs.get('extras')
+        fspec = kwargs.get('fret_range')
+        # sanity checks
+        # 1. is it a 2-tuple or list?
+        # 2. arww the values ints
+        # 3. is x[0] < x[1]
+        if fspec is None:
+            self.fretspec = None
+        elif not (isinstance(fspec, (tuple,list)) and len(fspec) == 2):
+            print("fret range must have 2 entries")
+            self.fretspec = None
+        elif not all([isinstance(x, int) for x in fspec]):
+            print("fret range must consist of integers only")
+            self.fretspec = None
+        elif not fspec[0] < fspec[1]:
+            self.fretspec = None
+        elif self.minfret - fspec[0] > 5:
+            self.fretspec = None
+        elif self.maxfret > fspec[1]:
+            print("highest fret is outside fret range")
+            self.fretspec = None
+        else:
+            self.fretspec = fspec
+
+
+    def get_fret_range(self):
+        """
+        Work out how many frets to draw and which one to start at
+        we want 5 frets, starting at 0 or self.minfret - 1
+        """
+        # have we overridden this in config?
+        if self.fretspec is not None:
+            fr = self.fretspec
+        # else, calculate based on frets used
+        chord_width = self.maxfret - self.minfret
+        # the chord fits in the first 5 frets
+        if self.maxfret <= 5:
+            fr = (0, 5)
+        elif chord_width <= 4:
+            fr = (self.minfret - 1, self.minfret + 3)
+        else:
+            fr = (self.minfret, self.maxfret)
+        print("{0} fret range: {1}-{2}".format(self.title, *fr))
+        return fr
+
+
+    def draw(self):
+        super(MultiFingerChord, self).draw()
+        if self.extras is not None:
+            for e in self.extras:
+                self.fretboard.add_marker(
+                        string=e['string'],
+                        fret=e['fret'],
+                        color=e.get('color'),
+                        label=e['finger'],
+                        font_color=e.get('font_color')
+                        )
+
