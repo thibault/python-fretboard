@@ -247,8 +247,8 @@ class MultiFingerChord(UkuleleChord):
         if self.extras is not None:
             for e in self.extras:
                 self.fretboard.add_marker(
-                        string=e['string'],
-                        fret=e['fret'],
+                        string=int(e['string']),
+                        fret=int(e['fret']),
                         color=e.get('color'),
                         label=e['finger'],
                         font_color=e.get('font_color')
