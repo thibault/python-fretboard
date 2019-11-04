@@ -192,8 +192,8 @@ class MultiFingerChord(UkuleleChord):
 
         fretted_positions = list(filter(lambda pos: isinstance(pos, int), self.positions))
         self.maxfret = max(fretted_positions)
-        self.minfret = min([p for p in fretted_positions if p > 0 ])
-        print("min: {} max: {}".format(self.minfret, self.maxfret))
+        self.minfret = min([p for p in fretted_positions if p >= 0 ])
+        # print("min: {} max: {}".format(self.minfret, self.maxfret))
 
         # our additional key for extra fingers
         self.extras = kwargs.get('extras')
