@@ -197,6 +197,7 @@ class MultiFingerChord(UkuleleChord):
 
         # our additional key for extra fingers
         self.extras = kwargs.get('extras')
+        print("extras: {}".format(self.extras))
         fspec = kwargs.get('fret_range')
         # sanity checks
         # 1. is it a 2-tuple or list?
@@ -247,8 +248,8 @@ class MultiFingerChord(UkuleleChord):
         if self.extras is not None:
             for e in self.extras:
                 self.fretboard.add_marker(
-                        string=e['string'],
-                        fret=e['fret'],
+                        string=int(e['string']),
+                        fret=int(e['fret']),
                         color=e.get('color'),
                         label=e['finger'],
                         font_color=e.get('font_color')
