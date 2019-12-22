@@ -3,43 +3,44 @@ fretboard:
   drawing:
       background_color:
       font_color: dimgray
-      font_family: Verdana
+      font_family: Lato
       font_size: 24
       height: 400
       width: 300
       spacing: 30
       label_all_frets: false
   nut:
-      color: darkslategray
+      color: "#2B214C"
       size: 10
   fret:
-      color: darkgray
+      color: "#2B214C"
       size: 2
   inlays:
-      color: darkslategray
+      color: "#2B214C"
       radius: 2
   string:
-      color: darkslategray
+      color: "#2B214C"
       size: 3
       muted_font_color:
       open_font_color:
       label_font_family:
       label_font_size:
-      equal_weight: false
+      equal_weight: true
 
   marker:
-      border_color: black
-      color: darkslategray
+      border_color: "#2B214C"
+      color: "#418dde"
       font_color: white
       radius: 18
       stroke_width: 2
   title:
-      font_color: dimgray
-      font_family: Verdana
+      font_color: "#2B214C"
+      font_family: Lato
       font_size: 30
   fret_label:
       width: 28
       font_style: italic
+      font_size: 24
 
 
 chord:
