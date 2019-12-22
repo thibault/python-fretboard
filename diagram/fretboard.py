@@ -25,7 +25,7 @@ class Fretboard(object):
             style=None,
             label_all_frets=False
     ):
-        self.frets = list(range(max(frets[0] - 1, 0), frets[1] + 1))
+        self.frets = list(range(frets[0] - 1, frets[1] + 1))
         self.strings = [AttrDict({
             'color': None,
             'label': None,
@@ -76,7 +76,7 @@ class Fretboard(object):
         # Bounding box of our fretboard
         self.layout.x = self.style.drawing.spacing
         # Above the fret box is the title, with padding either side
-        self.layout.y = self.style.drawing.spacing
+        self.layout.y = 0
         if self.title:
             self.layout.y += (self.style.drawing.spacing
                               + self.style.title.font_size)
@@ -90,7 +90,7 @@ class Fretboard(object):
         self.layout.width -= self.style.fret_label.width
 
         self.layout.height = (self.style.drawing.height
-                              - (self.layout.y + self.style.drawing.spacing))
+                              - (self.layout.y))
 
         # Spacing between the strings
         self.layout.string_space = self.layout.width / (len(self.strings) - 1)
@@ -106,7 +106,7 @@ class Fretboard(object):
         top = self.layout.y + self.style.nut.size
 
         for index, fret in enumerate(self.frets):
-            if index == 0 and self.frets[0] == 0:
+            if fret < 0:
                 # The first fret is the nut, don't draw it.
                 continue
             else:
@@ -128,6 +128,8 @@ class Fretboard(object):
     def draw_strings(self):
         top = self.layout.y
         bottom = top + self.layout.height
+        if self.frets[0] == -1:
+            top += self.layout.fret_space
 
         label_y = (self.layout.y
                    + self.style.drawing.font_size / 2
@@ -181,8 +183,8 @@ class Fretboard(object):
                 )
 
     def draw_nut(self):
-        if self.frets[0] == 0:
-            top = self.layout.y + (self.style.nut.size / 2)
+        if self.frets[0] == -1:
+            top = self.layout.y + self.layout.fret_space + (self.style.nut.size / 2)
             self.drawing.add(
                 self.drawing.line(
                     start=(self.layout.x, top),
@@ -236,7 +238,7 @@ class Fretboard(object):
         draw fret number to the right of the first used fret.
         """
         # no labels in first position
-        if self.frets[0] == 0:
+        if self.frets[0] == -1:
             return
 
         # build a list of frets to label
@@ -402,6 +404,7 @@ class Fretboard(object):
             self.style.drawing.width,
             self.style.drawing.height
         ))
+        self.drawing['class'] = 'fretboard'
 
         if self.style.drawing.background_color is not None:
             self.drawing.add(
